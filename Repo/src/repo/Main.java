@@ -3,7 +3,9 @@ package repo;
 public class Main {
 
 	public static void main(String[] args) {
-		// Can you see this?
+		for (int i=0; i<3; i++) {
+			System.out.println(i+1);
+		}
 	}
 
 }
