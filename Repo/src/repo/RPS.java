@@ -30,6 +30,7 @@ public class RPS {
 		degree = direction;
 	}
 	
+	// return methods
 	public int[] getPos() {
 		return new int[] {xPos, yPos};
 	}
