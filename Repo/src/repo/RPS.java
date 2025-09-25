@@ -1,11 +1,13 @@
 package repo;
 
+import javax.swing.Icon;
 import javax.swing.JFrame;
 
 public class RPS {
 	public static final int SIZE = 10; // size of the square hitbox
 	
 	private String type; // name of the object
+	private Icon icon;
 	private int xPos; // x coordinate
 	private int yPos; // y coordinate
 	private int degree; // angle of the direction the object moves
@@ -31,7 +33,13 @@ public class RPS {
 	}
 	
 	// return methods
-	public int[] getPos() {
+	public int getX() {
+		return xPos;
+	}
+	public int getY() {
+		return yPos;
+	}
+ 	public int[] getPos() {
 		return new int[] {xPos, yPos};
 	}
 	public String getType() {
@@ -39,5 +47,9 @@ public class RPS {
 	}
 	public int getDeg() {
 		return degree;
+	}
+	public void setDeg(int addedDeg) {
+		degree += addedDeg; // add degree
+		degree %= 360; // makes sure degree doesn't go over 360 to stay within 360 degrees
 	}
  }
