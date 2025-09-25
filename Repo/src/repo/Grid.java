@@ -1,6 +1,6 @@
 package repo;
 
-public class Main {
+public class Grid {
 
 	public static void main(String[] args) {
 		
