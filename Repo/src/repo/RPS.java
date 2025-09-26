@@ -4,9 +4,10 @@ import java.awt.Component;
 import java.awt.Graphics;
 
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
-public class RPS implements Icon {
-	public static final int SIZE = 10; // size of the square hitbox
+public class RPS extends ImageIcon {
+	public static final int SIZE = 10; // size of the square hit box
 	
 	private String type; // name of the object
 	private int xPos; // x coordinate
@@ -56,21 +57,4 @@ public class RPS implements Icon {
 		direction[1] *= -1;
 	}
 	
-	@Override
-	public void paintIcon(Component c, Graphics g, int x, int y) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int getIconWidth() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getIconHeight() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
  }
