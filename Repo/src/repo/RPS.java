@@ -1,16 +1,20 @@
 package repo;
 
-import javax.swing.JFrame;
+import java.awt.Component;
+import java.awt.Graphics;
 
-public class RPS {
-	public static final int SIZE = 10; // size of the square hitbox
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
+public class RPS extends ImageIcon {
+	public static final int SIZE = 10; // size of the square hit box
 	
 	private String type; // name of the object
 	private int xPos; // x coordinate
 	private int yPos; // y coordinate
-	private int degree; // angle of the direction the object moves
+	private int[] direction = new int[2]; // x and y direction
 	
-	public RPS (String type, int x, int y, int direction) {
+	public RPS (String type, int x, int y, int[] direction) {
 		
 		// checks if type is a rock, paper or scissors, complains if it's invalid
 		if(type.equals("rock")) {
@@ -27,17 +31,30 @@ public class RPS {
 		this.type = type;
 		xPos = x;
 		yPos = y;
-		degree = direction;
+		this.direction = direction;
 	}
 	
 	// return methods
-	public int[] getPos() {
+	public int getX() {
+		return xPos;
+	}
+	public int getY() {
+		return yPos;
+	}
+ 	public int[] getPos() {
 		return new int[] {xPos, yPos};
 	}
 	public String getType() {
 		return type;
 	}
-	public int getDeg() {
-		return degree;
+	public int[] getDeg() {
+		return direction;
 	}
+	public void changeX() {
+		direction[0] *= -1;
+	}
+	public void changeY() {
+		direction[1] *= -1;
+	}
+	
  }
