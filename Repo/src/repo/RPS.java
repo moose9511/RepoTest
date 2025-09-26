@@ -1,18 +1,19 @@
 package repo;
 
-import javax.swing.Icon;
-import javax.swing.JFrame;
+import java.awt.Component;
+import java.awt.Graphics;
 
-public class RPS {
+import javax.swing.Icon;
+
+public class RPS implements Icon {
 	public static final int SIZE = 10; // size of the square hitbox
 	
 	private String type; // name of the object
-	private Icon icon;
 	private int xPos; // x coordinate
 	private int yPos; // y coordinate
-	private int degree; // angle of the direction the object moves
+	private int[] direction = new int[2]; // x and y direction
 	
-	public RPS (String type, int x, int y, int direction) {
+	public RPS (String type, int x, int y, int[] direction) {
 		
 		// checks if type is a rock, paper or scissors, complains if it's invalid
 		if(type.equals("rock")) {
@@ -29,7 +30,7 @@ public class RPS {
 		this.type = type;
 		xPos = x;
 		yPos = y;
-		degree = direction;
+		this.direction = direction;
 	}
 	
 	// return methods
@@ -45,11 +46,31 @@ public class RPS {
 	public String getType() {
 		return type;
 	}
-	public int getDeg() {
-		return degree;
+	public int[] getDeg() {
+		return direction;
 	}
-	public void setDeg(int addedDeg) {
-		degree += addedDeg; // add degree
-		degree %= 360; // makes sure degree doesn't go over 360 to stay within 360 degrees
+	public void changeX() {
+		direction[0] *= -1;
+	}
+	public void changeY() {
+		direction[1] *= -1;
+	}
+	
+	@Override
+	public void paintIcon(Component c, Graphics g, int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getIconWidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getIconHeight() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
  }
