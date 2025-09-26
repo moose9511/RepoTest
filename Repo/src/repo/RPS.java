@@ -56,5 +56,11 @@ public class RPS extends ImageIcon {
 	public void changeY() {
 		direction[1] *= -1;
 	}
+	public int[] getCenter() {
+		int[] res = new int[2];
+		res[0] = xPos+(this.getIconWidth()/2);
+		res[1] = yPos+(this.getIconHeight()/2);
+		return res;
+	}
 	
  }
