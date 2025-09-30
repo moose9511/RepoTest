@@ -1,17 +1,15 @@
 package repo;
 
-import java.awt.Component;
-import java.awt.Graphics;
+import java.awt.Image;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 public class RPS extends ImageIcon {
-	public static final int SIZE = 10; // size of the square hit box
+	public static final int RADIUS = 10; // size of the radius of the hit box
 	
 	private String type; // name of the object
-	private int xPos; // x coordinate
-	private int yPos; // y coordinate
+	private int xPos; // x coordinate of the middle
+	private int yPos; // y coordinate of the middle
 	private int[] direction = new int[2]; // x and y direction
 	
 	public RPS (String type, int x, int y, int[] direction) {
@@ -19,10 +17,16 @@ public class RPS extends ImageIcon {
 		// checks if type is a rock, paper or scissors, complains if it's invalid
 		if(type.equals("rock")) {
 			this.type = "rock";
+			ImageIcon temp = new ImageIcon(getClass().getResource("/imgs/rock.jpg"));
+			super.setImage(temp.getImage());
 		} else if (type.equals("paper")) {
 			this.type = "paper";
+			ImageIcon temp = new ImageIcon(getClass().getResource("/imgs/paper.jpg"));
+			super.setImage(temp.getImage());
 		} else if (type.equals("scissors")) {
 			this.type = "scissors";
+			ImageIcon temp = new ImageIcon(getClass().getResource("/imgs/scissors.jpg"));
+			super.setImage(temp.getImage());
 		} else {
 			System.out.println("Invalid type for RPS");
 			return;
