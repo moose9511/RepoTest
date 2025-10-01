@@ -28,7 +28,11 @@ public class GUI {
         }
         return res;
     }
-
+public boolean isValid(int x, int y) {
+	return ((x > 0 && x < frame.getWidth()-10) && (y > 0 && y < frame.getHeight()-10));
+}
+    
+    
     public RPS itemAt(int x, int y){
         if((x > 0 && x < frame.getWidth()-1) && (y > 0 && y < frame.getHeight()-1)){
             //System.out.println("b");
@@ -46,6 +50,9 @@ public class GUI {
     public void move(RPS target, int multi){
         int[] dir = target.getDir();
         int[] pos = target.getPos();
+        if(!isValid(pos[0]+(dir[0]*multi), pos[1]+(dir[1]*multi))) {
+        	target.setDir(new int[] {-dir[0], -dir[1]});
+        }
         if(!isEmpty(pos[0]+(dir[0]*multi), pos[1]+(dir[1]*multi))){
             RPS i = itemAt(pos[0]+(dir[0]*multi), pos[1]+(dir[1]*multi));
             if(i != null){
