@@ -7,11 +7,11 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 public class RPS extends ImageIcon {
-	public static final int SIZE = 10; // size of the square hit box
+	public static final int RADIUS = 10; // size of the square hit box
 	
 	private String type; // name of the object
-	private int xPos; // x coordinate
-	private int yPos; // y coordinate
+	private int xPos; // x coordinate in middle of object
+	private int yPos; // y coordinate in middle of object
 	private int[] direction = new int[2]; // x and y direction
 	
 	public RPS (String type, int x, int y, int[] direction) {
@@ -58,8 +58,8 @@ public class RPS extends ImageIcon {
 	}
 	public int[] getCenter() {
 		int[] res = new int[2];
-		res[0] = xPos+(this.getIconWidth()/2);
-		res[1] = yPos+(this.getIconHeight()/2);
+		res[0] = xPos+RADIUS;
+		res[1] = yPos+RADIUS;
 		return res;
 	}
 	
