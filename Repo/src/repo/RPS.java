@@ -6,16 +6,16 @@ import java.awt.Image;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+
 public class RPS extends JLabel {
-	public static final int SIZE = 10; // size of the square hit box
-	
+	public static final int RADIUS = 10; // size of the square hit box
 	private String type; // name of the object
-	private int xPos; // x coordinate
-	private int yPos; // y coordinate
+	private int xPos; // x coordinate in middle of object
+	private int yPos; // y coordinate in middle of object
 	private int[] direction = new int[2]; // x and y direction
 	
 	public RPS (String type, int x, int y, int[] direction) {
-		//super(new ImageIcon(getClass().getResource("/imgs/" + type + ".jpg")));
+		super(type);
 		// checks if type is a rock, paper or scissors, complains if it's invalid
 		if(type.equals("rock")) {
 			this.type = "rock";
@@ -73,8 +73,8 @@ public class RPS extends JLabel {
     }
 	public int[] getCenter() {
 		int[] res = new int[2];
-		res[0] = xPos+10;
-		res[1] = yPos+10;
+		res[0] = xPos+RADIUS;
+		res[1] = yPos+RADIUS;
 		return res;
 	}
 	
