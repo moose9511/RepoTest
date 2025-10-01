@@ -5,11 +5,11 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 public class RPS extends ImageIcon {
-	public static final int RADIUS = 10; // size of the radius of the hit box
+	public static final int RADIUS = 10; // size of the square hit box
 	
 	private String type; // name of the object
-	private int xPos; // x coordinate of the middle
-	private int yPos; // y coordinate of the middle
+	private int xPos; // x coordinate in middle of object
+	private int yPos; // y coordinate in middle of object
 	private int[] direction = new int[2]; // x and y direction
 	
 	public RPS (String type, int x, int y, int[] direction) {
