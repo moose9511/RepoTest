@@ -1,5 +1,4 @@
 package repo;
-import java.util.concurrent.*;
 import javax.swing.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,16 +8,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 public class GUI {
 	JFrame frame;
-    JLabel numLabel;
-	JPanel gamePane, configPane;
-	JSlider numSlider;
-    JButton continueBtn;
+    JLabel numLabel, speedLabel;
+	JPanel gamePane, configPane, controlPanel;
+	JSlider numSlider, speedSlider;
+    JButton continueBtn, pauseBtn;
     RPS[] items;
-    
+    int tps;
+    boolean paused;
+    Timer timer;
     // checks if a circular area at a specified point intersects an area of an item
     public boolean isEmpty(int x, int y){
         boolean res = true;
-        if((x > 0 && x < frame.getWidth()-1) && (y > 0 && y < frame.getHeight()-1)){
+        if(isValid(x,y)){
         	// checks each items distance to the point to see if the distance is close enough to have intersected
             for(RPS item : items){
                 if(item != null){
@@ -33,12 +34,12 @@ public class GUI {
     
     // checks if a circular area at a specified point is within the frame
 	public boolean isValid(int x, int y) {
-		return ((x > 0 && x < frame.getWidth()-RPS.RADIUS) && (y > 0 && y < frame.getHeight()-RPS.RADIUS));
+		return ((x > 0 && x < gamePane.getWidth()-RPS.RADIUS) && (y > 0 && y < gamePane.getHeight()-RPS.RADIUS));
 	}
     
 	// checks if a circular area at a specified point intersects an area of an item, returns the intersected item if so
     public RPS itemAt(int x, int y){
-        if((x > 0 && x < frame.getWidth()-1) && (y > 0 && y < frame.getHeight()-1)){
+        if(isValid(x,y)){
             // checks each items distance to the point to see if the distance is close enough to have intersected
             for(RPS item : items){
                 int[] pos = item.getPos();
@@ -53,6 +54,7 @@ public class GUI {
 
     // moves an item to a desired position based on it's direction and speed
     public void move(RPS target, int multi){
+    	tps = 30;
         int[] dir = target.getDir();
         int[] pos = target.getPos();
         int[] targetPos = new int[] {pos[0]+(dir[0]*multi), pos[1]+(dir[1]*multi)};
@@ -64,7 +66,7 @@ public class GUI {
         	
         	// gets the intersected item and checks who wins
             RPS i = itemAt(targetPos[0], targetPos[1]);
-            if(i != null){
+            if(i != null && !i.equals(target)){
                 if(target.getType() == "rock"){
                     if(i.getType() == "paper"){
                         target.setType("paper");
@@ -102,7 +104,7 @@ public class GUI {
 		
 		// Number slider for amount of items
 		numSlider = new JSlider();
-		// what do the rounded numbers mean?
+		// setBounds takes 4 integers, so must round and convert a double into an int
 		numSlider.setBounds((int) Math.round((650*1.618/2)-100), (int) Math.round((650/2)-40), 200, 80);
         numSlider.setMaximum(50);
         
@@ -123,57 +125,102 @@ public class GUI {
         continueBtn.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-            	// where the program will be displayed
+            	JFrame gameFrame = new JFrame("RPS Simulator");
+                gameFrame.setSize((int) Math.round(650*1.618)+100, 750);
                 gamePane = new JPanel();
                 gamePane.setLayout(null);
-                
+                gamePane.setBounds(50, 50, (int) Math.round(650*1.618), 650);
+                controlPanel = new JPanel();
+                controlPanel.setLayout(null);
+                controlPanel.setBackground(new Color(230, 230, 230));
+                controlPanel.setBounds(0,0,frame.getWidth(), 50);
+                pauseBtn = new JButton("Pause Simulation");
+                pauseBtn.setBounds((int) Math.round(controlPanel.getWidth()*0.15)-75, (controlPanel.getHeight()/2)-15, 150, 30);
+                pauseBtn.addActionListener(new ActionListener() {
+                	@Override
+                	public void actionPerformed(ActionEvent e) {
+                		paused = !paused;
+                		pauseBtn.setText((paused) ? "Unpause Simulation" : "Pause Simulation");
+                	}
+                });
+                speedSlider = new JSlider();
+                speedSlider.setValue(30);
+                speedSlider.setBounds((int) Math.round(controlPanel.getWidth()*0.75)-100, 10, 200, 30);
+                speedSlider.setMinimum(1);
+                speedLabel = new JLabel("Ticks per second: 30");
+                speedLabel.setBounds((int) Math.round(controlPanel.getWidth()*0.55)-100, 10, 200, 30);
+                speedSlider.addChangeListener(new ChangeListener() {
+                    @Override
+                    public void stateChanged(ChangeEvent e){
+                        tps = speedSlider.getValue();
+                        speedLabel.setText("Ticks per second:  " + tps);
+                        System.out.println(tps);
+                        if(timer != null) {
+                        	timer.cancel();
+                        }
+                        timer = new Timer();
+                        timer.scheduleAtFixedRate(new TimerTask() {
+                            @Override
+                            public void run() {
+                            	if(!paused) {
+        	                        for(RPS item : items){
+        	                            //System.out.print(item.getPos)
+        	                            move(item, 10);
+        	                            
+        	                        }
+        	                        gamePane.revalidate();
+        	                        gamePane.repaint();
+                            	}
+                            }
+                        }, 0, 1000/((tps == 0) ? 30 : tps));
+                    }
+                });
+                controlPanel.add(speedSlider);
+                controlPanel.add(pauseBtn);
+                controlPanel.add(speedLabel);
+                gameFrame.add(gamePane);
+                gameFrame.add(controlPanel);
+                gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 int numEach = numSlider.getValue();
                 items = new RPS[numEach*3];
-                
-                // creates an amount of items for each type
+                //System.out.println("a");
                 for(int i = 0; i < 3; i++){
                     for(int ii = 0; ii < numEach; ii++){
                         int x = (int) Math.round(Math.random()*frame.getWidth());
                         int y = (int) Math.round(Math.random()*frame.getHeight());
-                        while(!isEmpty(x,y)){
+                        while(!isEmpty(x,y) || !isValid(x,y)){
                             x = (int) Math.round(Math.random()*frame.getWidth());
                             y = (int) Math.round(Math.random()*frame.getHeight());
                         }
-                        
-                        // picks random direction
                         int[] dir = {(Math.random() > .5) ? -1:1, (Math.random() > .5) ? -1:1};
                         RPS item = new RPS((i == 0) ? "rock" : (i == 1) ? "paper" : "scissors", x, y, dir);
-                        item.setBounds(x,y, RPS.DIAMETER, RPS.DIAMETER);
+                        item.setBounds(x,y, 20, 20);
                         items[(i*numEach)+ii] = item;
                         gamePane.add(item);
+                        System.out.println("Placed " + item.getType());
                     }
                 }
-                // sets game pane to frame
-                frame.setContentPane(gamePane);
-                frame.setVisible(true);
-                
-                Timer timer = new Timer();
+                //frame.setContentPane(gamePane);
+                frame.setVisible(false);
+                gameFrame.setVisible(true);
+                timer = new Timer();
                 timer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
-                        JPanel nPanel = new JPanel();
-                        nPanel.setLayout(null);
-                        for(RPS item : items){
-                            //System.out.print(item.getPos)
-                            move(item, 8);
-                            
-                            //item.setLocation(p[0], p[1]);
-                            //nPanel.add(item);
-                        }
-                        gamePane.revalidate();
-                        gamePane.repaint();
-                        //frame.setContentPane(nPanel);
-		                //frame.setVisible(true);
+                    	if(!paused) {
+	                        for(RPS item : items){
+	                            //System.out.print(item.getPos)
+	                            move(item, 10);
+	                            
+	                        }
+	                        gamePane.revalidate();
+	                        gamePane.repaint();
+                    	}
                     }
-                }, 0, 33);
+                }, 0, 1000/30);
             }
         });
-        continueBtn.setBounds((int) Math.round((650*1.618/2)-80), (int) Math.round((650/2)-5), 160, 70);
+        continueBtn.setBounds((int) Math.round((650*1.618/2)-90), (int) Math.round((650/2)+45), 180, 35);
 		configPane = new JPanel();
 		configPane.setLayout(null);
 		configPane.add(numSlider);
@@ -181,6 +228,5 @@ public class GUI {
         configPane.add(continueBtn);
 		frame.setContentPane(configPane);
 		frame.setVisible(true);
-        
 	}
 }
