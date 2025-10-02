@@ -14,16 +14,21 @@ public class RPS extends JLabel {
 	private int xPos; // x coordinate in middle of object
 	private int yPos; // y coordinate in middle of object
 	private int[] direction = new int[2]; // x and y direction
+	ImageIcon rock = new ImageIcon((new ImageIcon(getClass().getResource("/imgs/rock.jpg"))).getImage().getScaledInstance(RADIUS, RADIUS, Image.SCALE_SMOOTH));
+	ImageIcon paper = new ImageIcon((new ImageIcon(getClass().getResource("/imgs/paper.jpg"))).getImage().getScaledInstance(RADIUS, RADIUS, Image.SCALE_SMOOTH));
+	ImageIcon scissors = new ImageIcon((new ImageIcon(getClass().getResource("/imgs/scissors.jpg"))).getImage().getScaledInstance(RADIUS, RADIUS, Image.SCALE_SMOOTH));
 	
 	public RPS (String type, int x, int y, int[] direction) {
-		super(type);
 		// checks if type is a rock, paper or scissors, complains if it's invalid
 		if(type.equals("rock")) {
 			this.type = "rock";
+			super.setIcon(rock);
 		} else if (type.equals("paper")) {
 			this.type = "paper";
+			super.setIcon(paper);
 		} else if (type.equals("scissors")) {
 			this.type = "scissors";
+			super.setIcon(scissors);
 		} else {
 			System.out.println("Invalid type for RPS");
 			return;
@@ -54,10 +59,19 @@ public class RPS extends JLabel {
 	
 	// set methods
     public void setType(String type){
-        if(type.equals("rock") || type.equals("paper") || type.equals("scissors")){
-            this.type = type;
-            this.setIcon(new ImageIcon("/repo/imgs/" + type + ".jpg"));
-        }
+    	switch(type) {
+    	case "rock":
+    		super.setIcon(rock);
+    		break;
+    	case "paper":
+    		super.setIcon(paper);
+    		break;
+    	case "scissors":
+    		super.setIcon(scissors);
+    		break;
+    	default:
+    		System.out.println("Invalid call of setType for type '" + type + "'");
+    	}
     }
     public void setDir(int[] d) {
 		direction = d;
@@ -73,7 +87,7 @@ public class RPS extends JLabel {
     	yPos = pos[1];
     }
     
-    // reverse direction method
+    // reverse direction methods
 	public void changeX() {
 		direction[0] *= -1;
 	}
