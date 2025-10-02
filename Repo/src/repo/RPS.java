@@ -58,15 +58,18 @@ public class RPS extends JLabel {
 	}
 	
 	// set methods
-    public void setType(String type){
+    public void setType(String type) {
     	switch(type) {
     	case "rock":
+    		this.type = type;
     		super.setIcon(rock);
     		break;
     	case "paper":
+    		this.type = type;
     		super.setIcon(paper);
     		break;
     	case "scissors":
+    		this.type = type;
     		super.setIcon(scissors);
     		break;
     	default:
