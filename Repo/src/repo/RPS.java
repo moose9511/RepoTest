@@ -8,7 +8,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class RPS extends JLabel {
-	public static final int RADIUS = 10; // size of the square hit box
+	public static final int RADIUS = 10; // radius of the circular hit box
+	public static final int DIAMETER = RADIUS*2; // diameter of the circular hit box
 	private String type; // name of the object
 	private int xPos; // x coordinate in middle of object
 	private int yPos; // y coordinate in middle of object
@@ -34,7 +35,7 @@ public class RPS extends JLabel {
 		this.direction = direction;
 	}
 	
-	// return methods
+	// get methods
 	public int getX() {
 		return xPos;
 	}
@@ -47,23 +48,19 @@ public class RPS extends JLabel {
 	public String getType() {
 		return type;
 	}
-    public void setType(String type){
-        if(type.equals("rock") || type.equals("paper") || type.equals("scissors")){
-            this.type = type;
-            this.setIcon(new ImageIcon("images/" + type + ".png"));
-        }
-    }
 	public int[] getDir() {
 		return direction;
 	}
+	
+	// set methods
+    public void setType(String type){
+        if(type.equals("rock") || type.equals("paper") || type.equals("scissors")){
+            this.type = type;
+            this.setIcon(new ImageIcon("/repo/imgs/" + type + ".jpg"));
+        }
+    }
     public void setDir(int[] d) {
 		direction = d;
-	}
-	public void changeX() {
-		direction[0] *= -1;
-	}
-	public void changeY() {
-		direction[1] *= -1;
 	}
     public void setX(int num){
         xPos = num;
@@ -71,11 +68,22 @@ public class RPS extends JLabel {
     public void setY(int num){
         yPos = num;
     }
-	public int[] getCenter() {
-		int[] res = new int[2];
-		res[0] = xPos+RADIUS;
-		res[1] = yPos+RADIUS;
-		return res;
+    public void setPos(int[] pos) {
+    	xPos = pos[0];
+    	yPos = pos[1];
+    }
+    
+    // reverse direction method
+	public void changeX() {
+		direction[0] *= -1;
 	}
+	public void changeY() {
+		direction[1] *= -1;
+	}
+	public void changeDir() {
+		direction[0] *= -1;
+		direction[1] *= -1;
+	}
+    
 	
  }
