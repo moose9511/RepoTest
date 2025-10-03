@@ -17,20 +17,6 @@ public class GUI {
     boolean paused;
     Timer timer;
     // checks if a circular area at a specified point intersects an area of an item
-    public boolean isEmpty(int x, int y){
-        boolean res = true;
-        if(isValid(x,y)){
-        	// checks each items distance to the point to see if the distance is close enough to have intersected
-            for(RPS item : items){
-                if(item != null){
-                    int[] pos = item.getPos();
-                    double distance = Math.hypot(pos[0]-x, pos[1]-y);
-                    res = (Math.abs(distance) < RPS.RADIUS) ? false : res;
-                }
-            }
-        }
-        return res;
-    }
     
     // checks if a circular area at a specified point is within the frame
 	public boolean isValid(int x, int y) {
@@ -42,11 +28,13 @@ public class GUI {
         if(isValid(x,y)){
             // checks each items distance to the point to see if the distance is close enough to have intersected
             for(RPS item : items){
-                int[] pos = item.getPos();
-                double distance = Math.hypot(pos[0]-x, pos[1]-y);
-                if(Math.abs(distance) < RPS.RADIUS){
-                    return item;
-                }
+	            if(item != null) {
+	                int[] pos = item.getPos();
+	                double distance = Math.hypot(pos[0]-x, pos[1]-y);
+	                if(Math.abs(distance) < RPS.RADIUS){
+	                    return item;
+	                }
+	            }
             }
         } 
         return null;
@@ -58,33 +46,30 @@ public class GUI {
         int[] dir = target.getDir();
         int[] pos = target.getPos();
         int[] targetPos = new int[] {pos[0]+(dir[0]*multi), pos[1]+(dir[1]*multi)};
-        
-        if(!isValid(targetPos[0], targetPos[1])) { // change direction if item hits the edge of the wall
-        	target.changeDir();
+        if(!isValid(targetPos[0], targetPos[1])) {
+        	target.setDir(new int[] {-dir[0], -dir[1]});
         }
-        if(!isEmpty(targetPos[0], targetPos[1])){ // checks if targeted position is intersecting an item
+        RPS i = itemAt(targetPos[0], targetPos[1]);
+        if(i != null){ // checks if targeted position is intersecting an item
         	
         	// gets the intersected item and checks who wins
-            RPS i = itemAt(targetPos[0], targetPos[1]);
-            if(i != null && !i.equals(target)){
-                if(target.getType() == "rock"){
-                    if(i.getType() == "paper"){
-                        target.setType("paper");
-                    } else if(i.getType() == "scissors"){
-                        i.setType("rock");
-                    } 
-                } else if(target.getType() == "paper"){
-                    if(i.getType() == "scissors"){
-                        target.setType("scissors");
-                    } else if (i.getType() == "rock"){
-                        i.setType("paper");
-                    }
-                } else if(target.getType() == "scissors"){
-                    if(i.getType() == "rock"){
-                        target.setType("rock");
-                    } else if (i.getType() == "paper"){
-                        i.setType("scissors");
-                    }
+            if(target.getType() == "rock"){
+                if(i.getType() == "paper"){
+                    target.setType("paper");
+                } else if(i.getType() == "scissors"){
+                    i.setType("rock");
+                } 
+            } else if(target.getType() == "paper"){
+                if(i.getType() == "scissors"){
+                    target.setType("scissors");
+                } else if (i.getType() == "rock"){
+                    i.setType("paper");
+                }
+            } else if(target.getType() == "scissors"){
+                if(i.getType() == "rock"){
+                    target.setType("rock");
+                } else if (i.getType() == "paper"){
+                    i.setType("scissors");
                 }
             }
             
@@ -147,6 +132,7 @@ public class GUI {
                 speedSlider.setValue(30);
                 speedSlider.setBounds((int) Math.round(controlPanel.getWidth()*0.75)-100, 10, 200, 30);
                 speedSlider.setMinimum(1);
+                speedSlider.setBackground(new Color(230, 230, 230));
                 speedLabel = new JLabel("Ticks per second: 30");
                 speedLabel.setBounds((int) Math.round(controlPanel.getWidth()*0.55)-100, 10, 200, 30);
                 speedSlider.addChangeListener(new ChangeListener() {
@@ -163,10 +149,18 @@ public class GUI {
                             @Override
                             public void run() {
                             	if(!paused) {
+                            		String type = null;
+                            		boolean allSameType = true;
         	                        for(RPS item : items){
         	                            //System.out.print(item.getPos)
         	                            move(item, 10);
+        	                            type = (type == null) ? item.getType() : type;
+        	                            allSameType = (item.getType() == type) ? allSameType : false;
         	                            
+        	                        }
+        	                        if(allSameType) {
+        	                        	paused = true;
+        	                        	speedLabel.setText(type + " Wins!");
         	                        }
         	                        gamePane.revalidate();
         	                        gamePane.repaint();
@@ -188,7 +182,7 @@ public class GUI {
                     for(int ii = 0; ii < numEach; ii++){
                         int x = (int) Math.round(Math.random()*frame.getWidth());
                         int y = (int) Math.round(Math.random()*frame.getHeight());
-                        while(!isEmpty(x,y) || !isValid(x,y)){
+                        while((itemAt(x,y) != null) || !isValid(x,y)){
                             x = (int) Math.round(Math.random()*frame.getWidth());
                             y = (int) Math.round(Math.random()*frame.getHeight());
                         }
@@ -208,10 +202,18 @@ public class GUI {
                     @Override
                     public void run() {
                     	if(!paused) {
+                    		String type = null;
+                    		boolean allSameType = true;
 	                        for(RPS item : items){
 	                            //System.out.print(item.getPos)
 	                            move(item, 10);
+	                            type = (type == null) ? item.getType() : type;
+	                            allSameType = (item.getType() == type) ? allSameType : false;
 	                            
+	                        }
+	                        if(allSameType) {
+	                        	paused = true;
+	                        	speedLabel.setText(type + " Wins!");
 	                        }
 	                        gamePane.revalidate();
 	                        gamePane.repaint();
@@ -221,11 +223,14 @@ public class GUI {
             }
         });
         continueBtn.setBounds((int) Math.round((650*1.618/2)-90), (int) Math.round((650/2)+45), 180, 35);
+        
+        /*Config pane definition*/
 		configPane = new JPanel();
 		configPane.setLayout(null);
 		configPane.add(numSlider);
         configPane.add(numLabel);
         configPane.add(continueBtn);
+        
 		frame.setContentPane(configPane);
 		frame.setVisible(true);
 	}
