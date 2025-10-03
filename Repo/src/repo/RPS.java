@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class RPS extends JLabel {
-	public static final int RADIUS = 10; // radius of the circular hit box
+	public static final int RADIUS = 20; // radius of the circular hit box
 	public static final int DIAMETER = RADIUS*2; // diameter of the circular hit box
 	private String type; // name of the object
 	private int xPos; // x coordinate in middle of object

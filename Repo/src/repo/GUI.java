@@ -16,7 +16,6 @@ public class GUI {
     int tps;
     boolean paused;
     Timer timer;
-    // checks if a circular area at a specified point intersects an area of an item
     
     // checks if a circular area at a specified point is within the frame
 	public boolean isValid(int x, int y) {
@@ -24,11 +23,11 @@ public class GUI {
 	}
     
 	// checks if a circular area at a specified point intersects an area of an item, returns the intersected item if so
-    public RPS itemAt(int x, int y){
+    public RPS itemAt(int x, int y, RPS self){
         if(isValid(x,y)){
             // checks each items distance to the point to see if the distance is close enough to have intersected
             for(RPS item : items){
-	            if(item != null) {
+	            if(item != null && item != self) {
 	                int[] pos = item.getPos();
 	                double distance = Math.hypot(pos[0]-x, pos[1]-y);
 	                if(Math.abs(distance) < RPS.RADIUS){
@@ -46,10 +45,12 @@ public class GUI {
         int[] dir = target.getDir();
         int[] pos = target.getPos();
         int[] targetPos = new int[] {pos[0]+(dir[0]*10), pos[1]+(dir[1]*10)};
+        
         if(!isValid(targetPos[0], targetPos[1])) {
         	target.setDir(new int[] {-dir[0], -dir[1]});
         }
-        RPS i = itemAt(targetPos[0], targetPos[1]);
+        
+        RPS i = itemAt(targetPos[0], targetPos[1], target);
         if(i != null){ // checks if targeted position is intersecting an item
         	
         	// gets the intersected item and checks who wins
@@ -182,7 +183,7 @@ public class GUI {
                     for(int ii = 0; ii < numEach; ii++){
                         int x = (int) Math.round(Math.random()*frame.getWidth());
                         int y = (int) Math.round(Math.random()*frame.getHeight());
-                        while((itemAt(x,y) != null) || !isValid(x,y)){
+                        while((itemAt(x,y, null) != null) || !isValid(x,y)){
                             x = (int) Math.round(Math.random()*frame.getWidth());
                             y = (int) Math.round(Math.random()*frame.getHeight());
                         }
