@@ -41,11 +41,11 @@ public class GUI {
     }
 
     // moves an item to a desired position based on it's direction and speed
-    public void move(RPS target, int multi){
+    public void move(RPS target){
     	tps = 30;
         int[] dir = target.getDir();
         int[] pos = target.getPos();
-        int[] targetPos = new int[] {pos[0]+(dir[0]*multi), pos[1]+(dir[1]*multi)};
+        int[] targetPos = new int[] {pos[0]+(dir[0]*10), pos[1]+(dir[1]*10)};
         if(!isValid(targetPos[0], targetPos[1])) {
         	target.setDir(new int[] {-dir[0], -dir[1]});
         }
@@ -153,7 +153,7 @@ public class GUI {
                             		boolean allSameType = true;
         	                        for(RPS item : items){
         	                            //System.out.print(item.getPos)
-        	                            move(item, 10);
+        	                            move(item);
         	                            type = (type == null) ? item.getType() : type;
         	                            allSameType = (item.getType() == type) ? allSameType : false;
         	                            
@@ -206,7 +206,7 @@ public class GUI {
                     		boolean allSameType = true;
 	                        for(RPS item : items){
 	                            //System.out.print(item.getPos)
-	                            move(item, 10);
+	                            move(item);
 	                            type = (type == null) ? item.getType() : type;
 	                            allSameType = (item.getType() == type) ? allSameType : false;
 	                            
