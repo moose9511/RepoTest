@@ -14,9 +14,9 @@ public class RPS extends JLabel {
 	private int xPos; // x coordinate in middle of object
 	private int yPos; // y coordinate in middle of object
 	private int[] direction = new int[2]; // x and y direction
-	ImageIcon rock = new ImageIcon((new ImageIcon(getClass().getResource("/imgs/rock.jpg"))).getImage().getScaledInstance(RADIUS, RADIUS, Image.SCALE_SMOOTH));
-	ImageIcon paper = new ImageIcon((new ImageIcon(getClass().getResource("/imgs/paper.jpg"))).getImage().getScaledInstance(RADIUS, RADIUS, Image.SCALE_SMOOTH));
-	ImageIcon scissors = new ImageIcon((new ImageIcon(getClass().getResource("/imgs/scissors.jpg"))).getImage().getScaledInstance(RADIUS, RADIUS, Image.SCALE_SMOOTH));
+	ImageIcon rock = new ImageIcon((new ImageIcon(getClass().getResource("/imgs/rock.png"))).getImage().getScaledInstance(RADIUS, RADIUS, Image.SCALE_SMOOTH));
+	ImageIcon paper = new ImageIcon((new ImageIcon(getClass().getResource("/imgs/paper.png"))).getImage().getScaledInstance(RADIUS, RADIUS, Image.SCALE_SMOOTH));
+	ImageIcon scissors = new ImageIcon((new ImageIcon(getClass().getResource("/imgs/scissors.png"))).getImage().getScaledInstance(RADIUS, RADIUS, Image.SCALE_SMOOTH));
 	
 	public RPS (String type, int x, int y, int[] direction) {
 		// checks if type is a rock, paper or scissors, complains if it's invalid
